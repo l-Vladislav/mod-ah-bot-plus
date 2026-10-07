@@ -160,6 +160,7 @@ private:
     bool DisabledRecipeProducedItemFilterEnabled;
     std::unordered_set<uint32> ItemIDsProducedByRecipes;
     std::map<uint32, std::unordered_set<uint32>> DisabledRecipeProducedItemClassSubClasses;
+    std::map<uint32, std::unordered_set<uint32>> DisabledItemClassSubClasses;
     std::set<uint32> DisabledItems;
     bool ListedItemLevelRestrictedEnabled;
     bool ListedItemLevelRestrictedUseCraftedItemForCalculation;

@@ -849,6 +849,15 @@ void AuctionHouseBot::PopulateItemCandidatesAndProportions()
             continue;
         }
 
+        // Disabled items by class and subclass
+        auto disabledClass = DisabledItemClassSubClasses.find(itr->second.Class);
+        if (disabledClass != DisabledItemClassSubClasses.end() && disabledClass->second.count(itr->second.SubClass) != 0)
+        {
+            if (debug_Out_Filters)
+                LOG_ERROR("module", "AuctionHouseBot: Item {} disabled (Configured by DisabledItemClassSubClasses)", itr->second.ItemId);
+            continue;
+        }
+
         // Disabled recipe item check
         if (DisabledRecipeProducedItemFilterEnabled == true)
         {
@@ -2222,6 +2231,8 @@ void AuctionHouseBot::InitializeConfiguration()
     ParseNumberListToSet(DisabledItems, sConfigMgr->GetOption<std::string>("AuctionHouseBot.DisabledInvalidItemIDs", ""), "AuctionHouseBot.DisabledInvalidItemIDs");
     ParseNumberListToSet(DisabledItems, sConfigMgr->GetOption<std::string>("AuctionHouseBot.DisabledCustomItemIDs", ""), "AuctionHouseBot.DisabledCustomItemIDs");
     AddValuesToSetByKeyMap(DisabledRecipeProducedItemClassSubClasses, sConfigMgr->GetOption<std::string>("AuctionHouseBot.DisabledRecipeProducedItemClassSubClasses", ""), 0, 20);
+    DisabledItemClassSubClasses.clear();
+    AddValuesToSetByKeyMap(DisabledItemClassSubClasses, sConfigMgr->GetOption<std::string>("AuctionHouseBot.DisabledItemClassSubClasses", ""), 0, 20);
 
     if (!sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION))
     {
